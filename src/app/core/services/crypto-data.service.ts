@@ -5,7 +5,7 @@ import { Injectable, signal, computed } from '@angular/core'; //injectable permi
 import { interval } from 'rxjs';
 // interval = para crear un observable que emite valores en intervalos regulares
 
-import { CryptoData } from '../models/crypto.model';
+import { CryptoData } from '../../models/crypto.model';
 // importa la interfaz CryptoData para tipar los datos de las criptomonedas
 
 

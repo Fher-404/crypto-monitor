@@ -1,19 +1,18 @@
-.container {
+    .container {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    }
 
-
-h1 {
+    h1 {
     text-align: center;
     color: #2c3e50;
     margin-bottom: 30px;
-}
+    }
 
-.crypto-grid {
+    .crypto-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
-}
+    }
