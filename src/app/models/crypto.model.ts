@@ -20,3 +20,9 @@ export interface CryptoStats {
 export interface PriceHistory {
   [symbol: string]: number[]; // Historial de precios para cada criptomoneda
 }
+
+export interface PriceAlert {
+  symbol: string;
+  threshold: number; // Umbral para la alerta
+  isActive: boolean; // Si la alerta está activa o no
+}

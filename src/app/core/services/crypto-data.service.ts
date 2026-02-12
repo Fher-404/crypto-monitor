@@ -10,6 +10,10 @@ import { CryptoData } from '../../models/crypto.model';
 
 import { CryptoStats } from '../../models/crypto.model';
 
+import { PriceAlert } from '../../models/crypto.model';
+
+
+
 
 //Le decimos que esta clase es un servicio inyectable a nivel raíz
     @Injectable({
@@ -41,7 +45,9 @@ import { CryptoStats } from '../../models/crypto.model';
 
     readonly stats = this._stats.asReadonly();
 
-
+// signal para alertas
+private readonly _alerts = signal<Map<string, PriceAlert>>(new Map());
+readonly alerts = this._alerts.asReadonly();
 
 
     // Aquí definimos una propiedad computada (computed)
@@ -97,6 +103,9 @@ import { CryptoStats } from '../../models/crypto.model';
                     price: newPrice
                 });
             }
+            
+            // Aquí podríamos agregar la lógica para verificar si el nuevo precio supera algún umbral de alerta
+            this.checkAlert(crypto.symbol, newPrice);
 
             //
             return {
@@ -111,10 +120,55 @@ import { CryptoStats } from '../../models/crypto.model';
         });
     }
 
+
+    //--------------------- Lógica para alertas de precio ---------------------//
+    // Crear o actualizar una alerta para una criptomoneda específica con un umbral de precio
+    setAlert(symbol:string, threshold: number): void {
+        this._alerts.update(currentAlerts => {
+            const newAlerts = new Map(currentAlerts);
+            newAlerts.set(symbol, {
+                symbol,
+                threshold,
+                isActive: true
+            });
+            return newAlerts;
+        });
+    }
+
+
+    
     getCryptoStats(symbol: string): CryptoStats | undefined {
         return this.stats().get(symbol);
     }
     
+    // Eliminar una alerta para una criptomoneda específica
+    removeAlert(symbol: string): void {
+        this._alerts.update(currentAlerts => {
+            const newAlerts = new Map(currentAlerts);
+            newAlerts.delete(symbol);
+            return newAlerts;
+        });
+    }
+
+    getAlert(symbol: string): PriceAlert | undefined {
+        return this.alerts().get(symbol);
+    }
+
+    // Verificar si el precio actual de una criptomoneda supera el umbral de alerta y desactivar la alerta si se cumple la condición
+    private checkAlert(symbol: string, price: number): void {
+        const alert = this._alerts().get(symbol);
+
+
+        if (alert && price >= alert.threshold) {
+            this._alerts.update(currentAlerts => {
+            const newAlerts = new Map(currentAlerts);
+            const updateAlert = { ...alert, isActive: false };
+            newAlerts.set(symbol, updateAlert);
+            return newAlerts;
+        });
+    }
+}
+
 
 
     // Inicia la aplicacion del servicio
@@ -125,7 +179,7 @@ import { CryptoStats } from '../../models/crypto.model';
     
     //Simulacion de actualizaciones de precio cada 200ms
     private startPriceSimulation(): void {
-        interval(200).subscribe(() => {
+        interval(2000).subscribe(() => {
         this.updatePrices();
         });
     }
