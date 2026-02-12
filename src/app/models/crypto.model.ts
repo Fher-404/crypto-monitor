@@ -16,3 +16,7 @@ export interface CryptoStats {
     movingAverage: number;   // Promedio móvil de precios
     volatility: number;      // Qué tan volátil es el precio
 }
+
+export interface PriceHistory {
+  [symbol: string]: number[]; // Historial de precios para cada criptomoneda
+}

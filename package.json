@@ -30,7 +30,9 @@
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "webworker": "^0.8.4",
+    "workers": "^0.0.1"
   },
   "devDependencies": {
     "@angular/build": "^21.1.0",

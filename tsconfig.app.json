@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/cryto-stats.worker.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

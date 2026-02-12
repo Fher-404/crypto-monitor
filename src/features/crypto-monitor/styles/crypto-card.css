@@ -1,4 +1,4 @@
-    .card {
+.card {
     background: white;
     border-radius: 12px;
     padding: 20px;
@@ -42,6 +42,7 @@
     padding: 8px 12px;
     border-radius: 6px;
     display: inline-block;
+    margin-bottom: 15px;
     }
 
     .change.positive {
@@ -52,4 +53,28 @@
     .change.negative {
     background-color: #f8d7da;
     color: #721c24;
+    }
+
+    .stats {
+    border-top: 1px solid #ecf0f1;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    }
+
+    .stat-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    }
+
+    .stat-label {
+    color: #7f8c8d;
+    font-weight: 500;
+    }
+
+    .stat-value {
+    color: #2c3e50;
+    font-weight: 600;
     }

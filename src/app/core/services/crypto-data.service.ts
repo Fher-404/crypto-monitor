@@ -8,6 +8,8 @@ import { interval } from 'rxjs';
 import { CryptoData } from '../../models/crypto.model';
 // importa la interfaz CryptoData para tipar los datos de las criptomonedas
 
+import { CryptoStats } from '../../models/crypto.model';
+
 
 //Le decimos que esta clase es un servicio inyectable a nivel raíz
     @Injectable({
@@ -34,6 +36,13 @@ import { CryptoData } from '../../models/crypto.model';
     // Es basicamente una "copia segura" de _cryptos
     readonly cryptos = this._cryptos.asReadonly();
 
+// Signal para estadisticas de cada crypto calculadas en el Worker
+    private readonly _stats = signal<Map<string, CryptoStats>>(new Map());
+
+    readonly stats = this._stats.asReadonly();
+
+
+
 
     // Aquí definimos una propiedad computada (computed)
     // Aqui seleccionamos filtramos las 5 criptomonedas con mayor ganancia (>5%)
@@ -44,8 +53,27 @@ import { CryptoData } from '../../models/crypto.model';
         .sort((a, b) => b.changePercent - a.changePercent);
     });
 
-    
 
+
+    // web worker
+    private worker?: Worker;
+    private initWorker(): void {
+        if (typeof Worker !== 'undefined') {
+            this.worker = new Worker(new URL('../crypto-stats.worker', import.meta.url), 
+            { type: 'module' });
+
+
+        this.worker.onmessage = ({ data }: {data: CryptoStats}) => {
+            this._stats.update(currentStats => {
+                const newStats = new Map(currentStats);
+                newStats.set(data.symbol, data);
+                return newStats;
+            });
+        };
+        }else {
+            console.warn('Web Workers are not supported in this environment.');
+        }
+    }
 
     private updatePrices(): void {
         //Esta primera funcion lo que hace es buscar todas las cryptos y establacer una variable
@@ -63,6 +91,12 @@ import { CryptoData } from '../../models/crypto.model';
             const changePercent = (Math.random() - 0.5) * 6;
             const newPrice = oldPrice * (1 + changePercent / 100);
             
+            if (this.worker) {
+                this.worker.postMessage({
+                    symbol: crypto.symbol,
+                    price: newPrice
+                });
+            }
 
             //
             return {
@@ -76,12 +110,17 @@ import { CryptoData } from '../../models/crypto.model';
         });
         });
     }
+
+    getCryptoStats(symbol: string): CryptoStats | undefined {
+        return this.stats().get(symbol);
+    }
     
 
 
     // Inicia la aplicacion del servicio
     constructor() {
         this.startPriceSimulation();
+        this.initWorker();
     }
     
     //Simulacion de actualizaciones de precio cada 200ms
