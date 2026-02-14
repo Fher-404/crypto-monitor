@@ -66,3 +66,4 @@ Angular CLI no viene con un framework de pruebas e2e por defecto. Puedes elegir 
 Para más información sobre el uso de Angular CLI, incluyendo referencias detalladas de los comandos, visita la página de [Descripción general y referencia de comandos de Angular CLI](https://angular.dev/tools/cli).
 
 # crypto-monitor
+

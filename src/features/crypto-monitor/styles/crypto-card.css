@@ -347,3 +347,30 @@
     grid-template-columns: 1fr;
     }
 }
+
+    .chart-wrapper {
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    }
+
+        .chart-section {
+    margin: 12px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chart-loading {
+    margin: 12px 0;
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    }

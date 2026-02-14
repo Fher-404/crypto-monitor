@@ -7,11 +7,12 @@ import { DecimalPipe } from '@angular/common';
 import { CryptoDataService } from '../../../app/core/services/crypto-data.service';
 import { HighlightChangeDirective } from '../../../app/shared/directive/highlight-change.directive';
 import { FormsModule } from '@angular/forms';
+import { CryptoChartComponent } from './crypto-chart.component';
 
 @Component({
 selector: 'app-crypto-card',
 standalone: true,
-imports: [DecimalPipe, HighlightChangeDirective, FormsModule], // Importamos la directiva para usarla en el template
+imports: [DecimalPipe, HighlightChangeDirective, FormsModule, CryptoChartComponent], // Importamos la directiva para usarla en el template
 changeDetection: ChangeDetectionStrategy.OnPush,
 //Detecta solo cuando hay cambios en las entradas @Input hay eventos como clicks o outputs o cuando cambia un signal
 template: `
@@ -43,6 +44,19 @@ template: `
         <span>{{ crypto().changePercent | number:'1.2-2' }}%</span>
         </div>
     </div>
+
+    @if (crypto().priceHistory && crypto().priceHistory!.length > 1) {
+    <div class="chart-section">
+        <app-crypto-chart 
+        [priceHistory]="crypto().priceHistory!"
+        [changePercent]="crypto().changePercent">
+        </app-crypto-chart>
+    </div>
+    } @else {
+    <div class="chart-loading">
+        Cargando gráfico...
+    </div>
+    }
 
     @if (currentStats()) {
         <div class="stats-grid">
@@ -101,7 +115,7 @@ private cryptoService = inject(CryptoDataService);
 
 // 👇 NUEVO: Computed signal para las stats de ESTA cripto
 currentStats = computed(() => {
-    return this.cryptoService.getCryptoStats(this.crypto().symbol);
+    return this.cryptoService.getStatsForCrypto(this.crypto().symbol);
 });
 
     alertThreshold = signal<number | null>(null);
